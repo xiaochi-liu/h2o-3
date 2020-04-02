@@ -642,6 +642,8 @@ public abstract class SharedTreeModel<
         return CategoricalEncoding.AUTO;
       case OneHotExplicit:
         return CategoricalEncoding.OneHotExplicit;
+      case Binary:
+        return CategoricalEncoding.Binary;
       case EnumLimited:
         return CategoricalEncoding.EnumLimited;
       default:
