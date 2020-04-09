@@ -772,8 +772,8 @@ public class LinearAlgebraUtils {
       }
     }
   }
-
-  public static Vec toEigen(Vec src) {
+  
+  public static double[] toEigenArray(Vec src) {
     Key<Frame> source = Key.make();
     Key<Frame> dest = Key.make();
     Frame train = new Frame(source, new String[]{"enum"}, new Vec[]{src});
@@ -797,16 +797,23 @@ public class LinearAlgebraUtils {
     DKV.put(dinfo);
     Gram.GramTask gtsk = new Gram.GramTask(null, dinfo).doAll(dinfo._adaptedFrame);
     // round the numbers to float precision to be more reproducible
-//    double[] rounded = gtsk._gram._diag;
+    // double[] rounded = gtsk._gram._diag;
     double[] rounded = new double[gtsk._gram._diag.length];
     for (int i = 0; i < rounded.length; ++i)
       rounded[i] = (float) gtsk._gram._diag[i];
     dinfo.remove();
-    Vec v = new ProjectOntoEigenVector(multiple(rounded, (int) gtsk._nobs, 1)).doAll(1, (byte) 3, train).outputFrame().anyVec();
+    double [] array = multiple(rounded, (int) gtsk._nobs, 1);
     if (created) {
       train.remove();
       DKV.remove(source);
     }
+    return array;
+  }
+
+  public static Vec toEigen(Vec src) {
+    Key<Frame> source = Key.make();
+    Frame train = new Frame(source, new String[]{"enum"}, new Vec[]{src});
+    Vec v = new ProjectOntoEigenVector(toEigenArray(src)).doAll(1, (byte) 3, train).outputFrame().anyVec();
     return v;
   }
   public static ToEigenVec toEigen = new ToEigenVec() {
