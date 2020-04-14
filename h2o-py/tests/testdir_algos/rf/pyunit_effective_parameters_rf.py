@@ -30,11 +30,11 @@ def test_random_forrest_effective_parameters():
                                    seed = 1234, categorical_encoding = 'Enum')
     rf2.train(x=list(range(2, train.ncol)), y="Angaus", training_frame=train)
 
-    assert rf1.effective_params['stopping_metric'] == rf2.actual_params['stopping_metric']
+    assert rf1.actual_params['stopping_metric'] == rf2.actual_params['stopping_metric']
     assert rf1.logloss() == rf2.logloss()
-    assert rf1.effective_params['distribution'] == rf2.actual_params['distribution']
-    assert rf1.effective_params['categorical_encoding'] == rf2.effective_params['categorical_encoding']
-    assert rf1.effective_params['fold_assignment'] == None
+    assert rf1.actual_params['distribution'] == rf2.actual_params['distribution']
+    assert rf1.actual_params['categorical_encoding'] == rf2.actual_params['categorical_encoding']
+    assert rf1.actual_params['fold_assignment'] == None
 
     rf1 = H2ORandomForestEstimator(ntrees=100, distribution="bernoulli", min_rows=10, max_depth=5, weights_column="Weights",
                                    nfolds = 5, calibrate_model=True, calibration_frame=calib, seed = 1234)
@@ -45,11 +45,11 @@ def test_random_forrest_effective_parameters():
                                    categorical_encoding = 'Enum')
     rf2.train(x=list(range(2, train.ncol)), y="Angaus", training_frame=train)
 
-    assert rf1.effective_params['stopping_metric'] is None
+    assert rf1.actual_params['stopping_metric'] is None
     assert rf1.logloss() == rf2.logloss()
-    assert rf1.effective_params['distribution'] == rf2.actual_params['distribution']
-    assert rf1.effective_params['fold_assignment'] == rf2.actual_params['fold_assignment']
-    assert rf1.effective_params['categorical_encoding'] == rf2.actual_params['categorical_encoding']
+    assert rf1.actual_params['distribution'] == rf2.actual_params['distribution']
+    assert rf1.actual_params['fold_assignment'] == rf2.actual_params['fold_assignment']
+    assert rf1.actual_params['categorical_encoding'] == rf2.actual_params['categorical_encoding']
 
 
 if __name__ == "__main__":

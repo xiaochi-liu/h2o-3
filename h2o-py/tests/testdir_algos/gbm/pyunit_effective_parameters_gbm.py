@@ -29,11 +29,11 @@ def test_gbm_effective_parameters():
     gbm2.train(x=predictors, y=response, training_frame=train, validation_frame=valid)
 
     assert gbm1.logloss() == gbm2.logloss()
-    assert gbm1.effective_params['distribution'] == gbm2.actual_params['distribution']
-    assert gbm1.effective_params['stopping_metric'] == gbm2.actual_params['stopping_metric']
-    assert gbm1.effective_params['histogram_type'] == gbm2.actual_params['histogram_type']
-    assert gbm1.effective_params['stopping_metric'] == gbm2.actual_params['stopping_metric']
-    assert gbm1.effective_params['categorical_encoding'] == gbm2.actual_params['categorical_encoding']
+    assert gbm1.actual_params['distribution'] == gbm2.actual_params['distribution']
+    assert gbm1.actual_params['stopping_metric'] == gbm2.actual_params['stopping_metric']
+    assert gbm1.actual_params['histogram_type'] == gbm2.actual_params['histogram_type']
+    assert gbm1.actual_params['stopping_metric'] == gbm2.actual_params['stopping_metric']
+    assert gbm1.actual_params['categorical_encoding'] == gbm2.actual_params['categorical_encoding']
 
 
     gbm1 = H2OGradientBoostingEstimator(seed = 1234, nfolds=5)
@@ -44,11 +44,11 @@ def test_gbm_effective_parameters():
     gbm2.train(x=predictors, y=response, training_frame=train, validation_frame=valid)
 
     assert gbm1.logloss() == gbm2.logloss()
-    assert gbm1.effective_params['distribution'] == gbm2.actual_params['distribution']
-    assert gbm1.effective_params['stopping_metric'] is None
-    assert gbm1.effective_params['histogram_type'] == gbm2.actual_params['histogram_type']
-    assert gbm1.effective_params['fold_assignment'] == gbm2.actual_params['fold_assignment']
-    assert gbm1.effective_params['categorical_encoding'] == gbm2.actual_params['categorical_encoding']
+    assert gbm1.actual_params['distribution'] == gbm2.actual_params['distribution']
+    assert gbm1.actual_params['stopping_metric'] is None
+    assert gbm1.actual_params['histogram_type'] == gbm2.actual_params['histogram_type']
+    assert gbm1.actual_params['fold_assignment'] == gbm2.actual_params['fold_assignment']
+    assert gbm1.actual_params['categorical_encoding'] == gbm2.actual_params['categorical_encoding']
 
     frame = h2o.import_file(path=pyunit_utils.locate("smalldata/logreg/prostate.csv"))
     frame.pop('ID')
@@ -61,7 +61,7 @@ def test_gbm_effective_parameters():
     gbm = H2OGradientBoostingEstimator(ntrees=5, max_depth=3)
     gbm.train(x=list(range(2,train.ncol)), y="CAPSULE", training_frame=train, validation_frame=test)
 
-    assert gbm.effective_params['categorical_encoding'] is None
+    assert gbm.actual_params['categorical_encoding'] is None
 
 if __name__ == "__main__":
   pyunit_utils.standalone_test(test_gbm_effective_parameters)

@@ -25,8 +25,8 @@ def test_gam_effective_parameters():
                                       standardize=True, Lambda=[0], alpha=[0], max_iterations=3)
     gam.train(x=["C1","C2"], y="C21", training_frame=h2o_data)
 
-    assert gam.effective_params['solver'] == "IRLSM"
-    assert gam.effective_params['fold_assignment'] == None
+    assert gam.actual_params['solver'] == "IRLSM"
+    assert gam.actual_params['fold_assignment'] == None
 
 
 

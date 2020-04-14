@@ -19,10 +19,10 @@ test.gbm.effective_parameters <- function() {
     categorical_encoding="Enum")
     
     
-    expect_equal(model1@effective_allparameters$distribution, model2@allparameters$distribution)
-    expect_equal(model1@effective_allparameters$stopping_metric, model2@allparameters$stopping_metric)
-    expect_equal(model1@effective_allparameters$histogram_type, model2@allparameters$histogram_type)
-    expect_equal(model1@effective_allparameters$categorical_encoding, model2@allparameters$categorical_encoding)
+    expect_equal(model1@parameters$distribution, model2@allparameters$distribution)
+    expect_equal(model1@parameters$stopping_metric, model2@allparameters$stopping_metric)
+    expect_equal(model1@parameters$histogram_type, model2@allparameters$histogram_type) 
+    expect_equal(model1@parameters$categorical_encoding, model2@allparameters$categorical_encoding)
 }
 
 doTest("Testing model accessors for GBM", test.gbm.effective_parameters)

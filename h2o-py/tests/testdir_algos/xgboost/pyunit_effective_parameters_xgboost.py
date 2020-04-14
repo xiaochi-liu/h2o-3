@@ -30,11 +30,11 @@ def test_xgboost_effective_parameters():
                                categorical_encoding="OneHotInternal", stopping_rounds =5, stopping_metric='logloss')
     xgb2.train(x=x, y=y, training_frame=training_frame, validation_frame=test_frame)
 
-    assert xgb1.effective_params['distribution'] == xgb2.actual_params['distribution']
+    assert xgb1.actual_params['distribution'] == xgb2.actual_params['distribution']
     assert xgb1.logloss() == xgb2.logloss()
-    assert xgb1.effective_params['stopping_metric'] == xgb2.actual_params['stopping_metric']
-    assert xgb1.effective_params['categorical_encoding'] == xgb2.actual_params['categorical_encoding']
-    assert xgb1.effective_params['fold_assignment'] is None
+    assert xgb1.actual_params['stopping_metric'] == xgb2.actual_params['stopping_metric']
+    assert xgb1.actual_params['categorical_encoding'] == xgb2.actual_params['categorical_encoding']
+    assert xgb1.actual_params['fold_assignment'] is None
 
 
     xgb1 = H2OXGBoostEstimator(training_frame=training_frame, learn_rate=0.7, booster='gbtree', seed=1, ntrees=2, nfolds=5)
@@ -44,11 +44,11 @@ def test_xgboost_effective_parameters():
                                categorical_encoding="OneHotInternal", nfolds=5, fold_assignment="Random")
     xgb2.train(x=x, y=y, training_frame=training_frame)
 
-    assert xgb1.effective_params['distribution'] == xgb2.actual_params['distribution']
+    assert xgb1.actual_params['distribution'] == xgb2.actual_params['distribution']
     assert xgb1.logloss() == xgb2.logloss()
-    assert xgb1.effective_params['stopping_metric'] is None
-    assert xgb1.effective_params['categorical_encoding'] == xgb2.actual_params['categorical_encoding']
-    assert xgb1.effective_params['fold_assignment'] == xgb2.actual_params['fold_assignment']
+    assert xgb1.actual_params['stopping_metric'] is None
+    assert xgb1.actual_params['categorical_encoding'] == xgb2.actual_params['categorical_encoding']
+    assert xgb1.actual_params['fold_assignment'] == xgb2.actual_params['fold_assignment']
 
 if __name__ == "__main__":
   pyunit_utils.standalone_test(test_xgboost_effective_parameters)
