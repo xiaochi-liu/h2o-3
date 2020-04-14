@@ -783,13 +783,7 @@ public class LinearAlgebraUtils {
       DKV.put(train);
       created=true;
       Log.info("Reducing the cardinality of a categorical column with " + src.cardinality() + " levels to " + maxLevels);
-      Interaction inter = new Interaction();
-      inter._source_frame = train._key;
-      inter._max_factors = maxLevels; // keep only this many most frequent levels
-      inter._min_occurrence = 2; // but need at least 2 observations for a level to be kept
-      inter._pairwise = false;
-      inter._factor_columns = train.names();
-      train = inter.execImpl(dest).get();
+      train = getInteraction(train._key, train.names(), maxLevels).execImpl(dest).get();
     }
     DataInfo dinfo = new DataInfo(train, null, 0, true /*_use_all_factor_levels*/, DataInfo.TransformType.NONE,
             DataInfo.TransformType.NONE, /* skipMissing */ false, /* imputeMissing */ true,
@@ -809,11 +803,34 @@ public class LinearAlgebraUtils {
     }
     return array;
   }
-
+  
+  public static Interaction getInteraction(Key<Frame> key, String[] names, int maxLevels) {
+    Interaction inter = new Interaction();
+    inter._source_frame = key;
+    inter._max_factors = maxLevels; // keep only this many most frequent levels
+    inter._min_occurrence = 2; // but need at least 2 observations for a level to be kept
+    inter._pairwise = false;
+    inter._factor_columns = names;
+    return inter;
+  }
+  
   public static Vec toEigen(Vec src) {
     Key<Frame> source = Key.make();
+    Key<Frame> dest = Key.make();
     Frame train = new Frame(source, new String[]{"enum"}, new Vec[]{src});
+    int maxLevels = 1024; // keep eigen projection method reasonably fast
+    boolean created=false;
+    if (src.cardinality()>maxLevels) {
+      DKV.put(train);
+      created=true;
+      Log.info("Reducing the cardinality of a categorical column with " + src.cardinality() + " levels to " + maxLevels);
+      train = getInteraction(train._key, train.names(), maxLevels).execImpl(dest).get();
+    }
     Vec v = new ProjectOntoEigenVector(toEigenArray(src)).doAll(1, (byte) 3, train).outputFrame().anyVec();
+    if (created) {
+      train.remove();
+      DKV.remove(source);
+    }
     return v;
   }
   public static ToEigenVec toEigen = new ToEigenVec() {
