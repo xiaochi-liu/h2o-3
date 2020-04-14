@@ -232,6 +232,7 @@ h2o.stackedEnsemble <- function(x,
                                                 metalearner_fold_assignment = c("AUTO", "Random", "Modulo", "Stratified"),
                                                 metalearner_fold_column = NULL,
                                                 metalearner_params = NULL,
+                                                max_runtime_secs = 0,
                                                 seed = -1,
                                                 keep_levelone_frame = FALSE,
                                                 export_checkpoints_dir = NULL,
@@ -295,6 +296,8 @@ h2o.stackedEnsemble <- function(x,
     parms$metalearner_fold_assignment <- metalearner_fold_assignment
   if (!missing(metalearner_fold_column))
     parms$metalearner_fold_column <- metalearner_fold_column
+  if (!missing(max_runtime_secs))
+    parms$max_runtime_secs <- max_runtime_secs
   if (!missing(seed))
     parms$seed <- seed
   if (!missing(keep_levelone_frame))
