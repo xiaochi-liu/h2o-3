@@ -648,6 +648,8 @@ public abstract class SharedTreeModel<
         return CategoricalEncoding.EnumLimited;
       case Eigen:
         return CategoricalEncoding.Eigen;
+      case LabelEncoder:
+        return CategoricalEncoding.LabelEncoder;
       default:
         return null;
     }

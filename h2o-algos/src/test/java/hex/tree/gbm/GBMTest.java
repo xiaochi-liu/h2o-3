@@ -142,7 +142,8 @@ public class GBMTest extends TestUtil {
               Model.Parameters.CategoricalEncodingScheme.SortByResponse,
               Model.Parameters.CategoricalEncodingScheme.EnumLimited,
               Model.Parameters.CategoricalEncodingScheme.Enum,
-              Model.Parameters.CategoricalEncodingScheme.Binary
+              Model.Parameters.CategoricalEncodingScheme.Binary,
+              Model.Parameters.CategoricalEncodingScheme.LabelEncoder
       };
       
       for (Model.Parameters.CategoricalEncodingScheme scheme : supportedSchemes) {
