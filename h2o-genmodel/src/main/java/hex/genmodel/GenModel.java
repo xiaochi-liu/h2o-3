@@ -192,7 +192,7 @@ public abstract class GenModel implements IGenModel, IGeneratedModel, Serializab
 
   /** Returns original Eigen encoder projections array for all columns. */
   @Override
-  public double[] getOrigProjectionArray() {return new double[]{0};}
+  public double[] getOrigProjectionArray() {return null;}
 
   /** Returns index of a column with given name, or -1 if the column is not found. */
   @Override public int getColIdx(String name) {

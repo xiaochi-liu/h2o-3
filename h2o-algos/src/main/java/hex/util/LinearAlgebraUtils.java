@@ -783,7 +783,7 @@ public class LinearAlgebraUtils {
       DKV.put(train);
       created=true;
       Log.info("Reducing the cardinality of a categorical column with " + src.cardinality() + " levels to " + maxLevels);
-      train = getInteraction(train._key, train.names(), maxLevels).execImpl(dest).get();
+      train = Interaction.getInteraction(train._key, train.names(), maxLevels).execImpl(dest).get();
     }
     DataInfo dinfo = new DataInfo(train, null, 0, true /*_use_all_factor_levels*/, DataInfo.TransformType.NONE,
             DataInfo.TransformType.NONE, /* skipMissing */ false, /* imputeMissing */ true,
@@ -791,7 +791,6 @@ public class LinearAlgebraUtils {
     DKV.put(dinfo);
     Gram.GramTask gtsk = new Gram.GramTask(null, dinfo).doAll(dinfo._adaptedFrame);
     // round the numbers to float precision to be more reproducible
-    // double[] rounded = gtsk._gram._diag;
     double[] rounded = new double[gtsk._gram._diag.length];
     for (int i = 0; i < rounded.length; ++i)
       rounded[i] = (float) gtsk._gram._diag[i];
@@ -804,16 +803,6 @@ public class LinearAlgebraUtils {
     return array;
   }
   
-  public static Interaction getInteraction(Key<Frame> key, String[] names, int maxLevels) {
-    Interaction inter = new Interaction();
-    inter._source_frame = key;
-    inter._max_factors = maxLevels; // keep only this many most frequent levels
-    inter._min_occurrence = 2; // but need at least 2 observations for a level to be kept
-    inter._pairwise = false;
-    inter._factor_columns = names;
-    return inter;
-  }
-  
   public static Vec toEigen(Vec src) {
     Key<Frame> source = Key.make();
     Key<Frame> dest = Key.make();
@@ -824,7 +813,7 @@ public class LinearAlgebraUtils {
       DKV.put(train);
       created=true;
       Log.info("Reducing the cardinality of a categorical column with " + src.cardinality() + " levels to " + maxLevels);
-      train = getInteraction(train._key, train.names(), maxLevels).execImpl(dest).get();
+      train = Interaction.getInteraction(train._key, train.names(), maxLevels).execImpl(dest).get();
     }
     Vec v = new ProjectOntoEigenVector(toEigenArray(src)).doAll(1, (byte) 3, train).outputFrame().anyVec();
     if (created) {

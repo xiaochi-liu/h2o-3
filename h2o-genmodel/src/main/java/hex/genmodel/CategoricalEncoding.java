@@ -63,7 +63,7 @@ public enum CategoricalEncoding {
   LabelEncoder {
     @Override
     public Map<String, Integer> createColumnMapping(GenModel m) {
-      return new LabelEncoderColumnMapper(m).create();
+      return new EnumEncoderColumnMapper(m).create();
     }
 
     @Override

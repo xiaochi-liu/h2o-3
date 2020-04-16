@@ -29,12 +29,4 @@ public class EigenEncoderDomainMapConstructor extends DomainMapConstructor {
     }
     return domainMap;
   }
-
-  public static long sum(long[] array) {
-    int sum = 0;
-    for (long value : array) {
-      sum += value;
-    }
-    return sum;
-  }
 }

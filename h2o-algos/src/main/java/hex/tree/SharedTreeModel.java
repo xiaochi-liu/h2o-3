@@ -676,7 +676,7 @@ public abstract class SharedTreeModel<
   
   String toJavaDoubleArray(double[] array) {
     if (array == null) {
-      return "new double[0]";
+      return "null";
     }
 
     SB sb = new SB();
