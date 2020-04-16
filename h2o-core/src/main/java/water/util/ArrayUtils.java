@@ -84,8 +84,9 @@ public class ArrayUtils {
 
   public static double innerProductPartial(double [] x, int[] x_index, double [] y){
     double result = 0;
-    for (int i = 0; i < y.length; i++)
+    for (int i = 0; i < y.length; i++) {
       result += x[x_index[i]] * y[i];
+    }
     return result;
   }
 

@@ -16,6 +16,7 @@ import water.util.ArrayUtils;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 public class GamUtils {
@@ -39,7 +40,21 @@ public class GamUtils {
 
   public static enum AllocateType {firstOneLess, sameOrig, bothOneLess, firstTwoLess} // special functions are performed depending on GLMType.  Internal use
 
-
+  public static Integer[] sortCoeffMags(int arrayLength, double[] coeffMags) {
+    Integer[] indices = new Integer[arrayLength];
+    for (int i = 0; i < indices.length; ++i)
+      indices[i] = i;
+    Arrays.sort(indices, new Comparator<Integer>() {
+      @Override
+      public int compare(Integer o1, Integer o2) {
+        if (coeffMags[o1] < coeffMags[o2]) return +1;
+        if (coeffMags[o1] > coeffMags[o2]) return -1;
+        return 0;
+      }
+    });
+    return indices;
+  }
+  
   public static boolean equalColNames(String[] name1, String[] standardN, String response_column) {
     boolean name1ContainsResp = ArrayUtils.contains(name1, response_column);
     boolean standarNContainsResp = ArrayUtils.contains(standardN, response_column);
