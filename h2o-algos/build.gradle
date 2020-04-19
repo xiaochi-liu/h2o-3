@@ -52,7 +52,6 @@ dependencies {
   testCompile project(":h2o-genmodel-ext-jgrapht")
   testCompile "junit:junit:${junitVersion}"
   testCompile project(path: ":h2o-core", configuration: "testArchives")
-  testCompileOnly 'javax.servlet:servlet-api:2.5'
   testRuntimeOnly project(":${defaultWebserverModule}")
 }
 
