@@ -47,12 +47,10 @@ dependencies {
     exclude group: 'com.github.fommil.netlib', module: 'all'
   }
 
-
   // Test dependencies only
+  testCompile project(":h2o-test-support")
   testCompile project(":h2o-genmodel-ext-jgrapht")
-  testCompile "junit:junit:${junitVersion}"
-  testCompile project(path: ":h2o-core", configuration: "testArchives")
-  testRuntimeOnly project(":${defaultWebserverModule}")
+  testCompile project(":${defaultWebserverModule}")
 }
 
 apply from: "${rootDir}/gradle/dataCheck.gradle"

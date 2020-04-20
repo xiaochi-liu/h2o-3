@@ -35,8 +35,7 @@ dependencies {
     }
   }
 
-  testCompile "junit:junit:${junitVersion}"
-  testCompile project(path: ":h2o-core", configuration: "testArchives")
+  testCompile project(":h2o-test-support")
   testRuntimeOnly project(":${defaultWebserverModule}")
   testCompile("org.apache.parquet:parquet-avro:${defaultParquetVersion}")
   // We need correct version of MapRe Hadoop to run JUnits
