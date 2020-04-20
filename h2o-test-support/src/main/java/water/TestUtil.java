@@ -349,8 +349,8 @@ public class TestUtil extends Iced {
   public static void assertIdenticalUpToRelTolerance(Frame fr1, Frame fr2, double epsilon, boolean expected, String messagePrefix) {
     if (fr1 == fr2) return;
     if (expected) {
-      Assert.assertEquals("Number of columns differ.", fr1.numCols(), fr2.numCols());
-      Assert.assertEquals("Number of rows differ.", fr1.numRows(), fr2.numRows());
+      assertEquals("Number of columns differ.", fr1.numCols(), fr2.numCols());
+      assertEquals("Number of rows differ.", fr1.numRows(), fr2.numRows());
     } else if (fr1.numCols() != fr2.numCols() || fr1.numRows() != fr2.numRows()) {
       return;
     }
@@ -737,7 +737,7 @@ public class TestUtil extends Iced {
   }
 
   public static void assertFrameEquals(Frame expected, Frame actual, Double absDelta, Double relativeDelta) {
-    Assert.assertEquals("Frames have different number of vecs. ", expected.vecs().length, actual.vecs().length);
+    assertEquals("Frames have different number of vecs. ", expected.vecs().length, actual.vecs().length);
     for (int i = 0; i < expected.vecs().length; i++) {
       if (expected.vec(i).isString())
         assertStringVecEquals(expected.vec(i), actual.vec(i));
@@ -755,7 +755,7 @@ public class TestUtil extends Iced {
   }
 
   public static void assertVecEquals(String messagePrefix, Vec expecteds, Vec actuals, Double absDelta, Double relativeDelta) {
-    Assert.assertEquals(expecteds.length(), actuals.length());
+    assertEquals(expecteds.length(), actuals.length());
     for(int i = 0; i < expecteds.length(); i++) {
       final String message = messagePrefix + i + ": " + expecteds.at(i) + " != " + actuals.at(i) + ", chunkIds = " + expecteds.elem2ChunkIdx(i) + ", " + actuals.elem2ChunkIdx(i) + ", row in chunks = " + (i - expecteds.chunkForRow(i).start()) + ", " + (i - actuals.chunkForRow(i).start());
       double expectedVal = expecteds.at(i);
@@ -787,8 +787,8 @@ public class TestUtil extends Iced {
   }
 
   public static void assertUUIDVecEquals(Vec expecteds, Vec actuals) {
-    Assert.assertEquals(expecteds.length(), actuals.length());
-    Assert.assertEquals("Vec types match", expecteds.get_type_str(), actuals.get_type_str());
+    assertEquals(expecteds.length(), actuals.length());
+    assertEquals("Vec types match", expecteds.get_type_str(), actuals.get_type_str());
     for(int i = 0; i < expecteds.length(); i++) {
       UUID expected = new UUID(expecteds.at16l(i), expecteds.at16h(i));
       UUID actual = new UUID(actuals.at16l(i), actuals.at16h(i));
@@ -800,8 +800,8 @@ public class TestUtil extends Iced {
   private static String toStr(BufferedString bs) { return bs != null ? bs.toString() : null; }
 
   public static void assertStringVecEquals(Vec expecteds, Vec actuals) {
-    Assert.assertEquals(expecteds.length(), actuals.length());
-    Assert.assertEquals("Vec types match", expecteds.get_type_str(), actuals.get_type_str());
+    assertEquals(expecteds.length(), actuals.length());
+    assertEquals("Vec types match", expecteds.get_type_str(), actuals.get_type_str());
     for(int i = 0; i < expecteds.length(); i++) {
       String expected = toStr(expecteds.atStr(new BufferedString(), i));
       String actual = toStr(actuals.atStr(new BufferedString(), i));
@@ -813,8 +813,8 @@ public class TestUtil extends Iced {
   private static String getFactorAsString(Vec v, long row) { return v.isNA(row) ? null : v.factor((long) v.at(row)); }
 
   public static void assertCatVecEquals(Vec expecteds, Vec actuals) {
-    Assert.assertEquals(expecteds.length(), actuals.length());
-    Assert.assertEquals("Vec types match", expecteds.get_type_str(), actuals.get_type_str());
+    assertEquals(expecteds.length(), actuals.length());
+    assertEquals("Vec types match", expecteds.get_type_str(), actuals.get_type_str());
     for(int i = 0; i < expecteds.length(); i++) {
       String expected = getFactorAsString(expecteds, i);
       String actual = getFactorAsString(actuals, i);
@@ -831,7 +831,7 @@ public class TestUtil extends Iced {
   public static void checkIcedArrays(IcedWrapper[][] expected, IcedWrapper[][] actual, double threshold) {
     for(int i = 0; i < actual.length; i++)
       for (int j = 0; j < actual[0].length; j++)
-      Assert.assertEquals(expected[i][j].d, actual[i][j].d, threshold);
+      assertEquals(expected[i][j].d, actual[i][j].d, threshold);
   }
 
   public static boolean[] checkEigvec(double[][] expected, double[][] actual, double threshold) {
@@ -966,21 +966,21 @@ public class TestUtil extends Iced {
   }
 
   public static boolean[] checkProjection(Frame expected, Frame actual, double threshold, boolean[] flipped) {
-    Assert.assertEquals("Number of columns", expected.numCols(), actual.numCols());
-    Assert.assertEquals("Number of columns in flipped", expected.numCols(), flipped.length);
+    assertEquals("Number of columns", expected.numCols(), actual.numCols());
+    assertEquals("Number of columns in flipped", expected.numCols(), flipped.length);
     int nfeat = (int) expected.numRows();
     int ncomp = expected.numCols();
 
     for(int j = 0; j < ncomp; j++) {
       Vec.Reader vexp = expected.vec(j).new Reader();
       Vec.Reader vact = actual.vec(j).new Reader();
-      Assert.assertEquals(vexp.length(), vact.length());
+      assertEquals(vexp.length(), vact.length());
       for (int i = 0; i < nfeat; i++) {
         if (vexp.isNA(i) || vact.isNA(i)) {
           continue;
         }
         // only perform comparison when data is not NAN
-        Assert.assertEquals(vexp.at8(i), flipped[j] ? -vact.at8(i) : vact.at8(i), threshold);
+        assertEquals(vexp.at8(i), flipped[j] ? -vact.at8(i) : vact.at8(i), threshold);
 
       }
     }
@@ -1081,8 +1081,8 @@ public class TestUtil extends Iced {
     Frame frame = null;
     try {
       frame = frameAssertion.prepare();
-      Assert.assertEquals("Frame has to have expected number of columns", dim[0], frame.numCols());
-      Assert.assertEquals("Frame has to have expected number of rows", dim[1], frame.numRows());
+      assertEquals("Frame has to have expected number of columns", dim[0], frame.numCols());
+      assertEquals("Frame has to have expected number of rows", dim[1], frame.numRows());
       frameAssertion.check(frame);
     } finally {
       frameAssertion.done(frame);
