@@ -40,7 +40,8 @@ dependencies {
   }
 
   testCompile project(':h2o-test-support')
-  testCompile project(":${defaultWebserverModule}")
+  testRuntimeOnly project(":${defaultWebserverModule}")
+  testCompileOnly 'javax.servlet:servlet-api:3.0'
 }
 
 apply from: "${rootDir}/gradle/dataCheck.gradle"
