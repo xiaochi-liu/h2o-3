@@ -2,6 +2,8 @@
 
 pwd
 export H2O_BASE=$(pwd)
+ln -s $H2O_BASE /home/h2o/
+export H2O_BASE=/home/h2o
 cd $H2O_BASE/h2o-k8s/tests/clustering/
 k3d --version
 k3d delete
