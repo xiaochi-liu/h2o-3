@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static hex.gam.GAMModel.cleanUpInputFrame;
 import static hex.gam.MatrixFrameUtils.GamUtils.AllocateType.*;
 import static hex.gam.MatrixFrameUtils.GamUtils.*;
 import static hex.glm.GLMModel.GLMParameters.Family.multinomial;
@@ -348,6 +349,12 @@ public class GAM extends ModelBuilder<GAMModel, GAMModel.GAMParameters, GAMModel
       if (error_count() > 0)   // if something goes wrong during gam transformation, let's throw a fit again!
         throw H2OModelBuilderIllegalArgumentException.makeFromBuilder(GAM.this);
       
+      if (valid() != null) {  // transform the validation frame if present
+        _valid = cleanUpInputFrame(valid().clone(), valid().names(), _parms, _gamColNamesCenter, _binvD, _zTranspose, _knots,
+                _numKnots);
+        Scope.track(_valid);
+        DKV.put(_valid);
+      }
       DKV.put(newTFrame); // This one will cause deleted vectors if add to Scope.track
       _job.update(0, "Initializing model training");
       buildModel(newTFrame); // build gam model 
@@ -372,7 +379,7 @@ public class GAM extends ModelBuilder<GAMModel, GAMModel.GAMParameters, GAMModel
 
         }
         _job.update(1, "calling GLM to build GAM model...");
-        GLMModel glmModel = buildGLMModel(_parms, newTFrame); // obtained GLM model
+        GLMModel glmModel = buildGLMModel(_parms, newTFrame, _valid==null?null:_valid._key); // obtained GLM model
         Scope.track_generic(glmModel);
         _job.update(0, "Building out GAM model...");
         fillOutGAMModel(glmModel, model, dinfo); // build up GAM model
@@ -421,8 +428,8 @@ public class GAM extends ModelBuilder<GAMModel, GAMModel.GAMParameters, GAMModel
       }
     }
 
-    GLMModel buildGLMModel(GAMParameters parms, Frame trainData) {
-      GLMParameters glmParam = GamUtils.copyGAMParams2GLMParams(parms, trainData);  // copy parameter from GAM to GLM
+    GLMModel buildGLMModel(GAMParameters parms, Frame trainData, Key<Frame> validKey) {
+      GLMParameters glmParam = GamUtils.copyGAMParams2GLMParams(parms, trainData, validKey);  // copy parameter from GAM to GLM
       int numGamCols = _parms._gam_columns.length;
       for (int find = 0; find < numGamCols; find++) {
         if ((_parms._scale != null) && (_parms._scale[find] != 1.0))

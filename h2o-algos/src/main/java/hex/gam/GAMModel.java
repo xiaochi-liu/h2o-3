@@ -457,14 +457,16 @@ public class GAMModel extends Model<GAMModel, GAMModel.GAMParameters, GAMModel.G
   }
 
   public Frame cleanUpInputFrame(Frame test, String[] testNames) {
-    Frame adptedF = new Frame(Key.make(), test._names.clone(), test.vecs().clone()); // clone test dataset
+    return cleanUpInputFrame(test, testNames, _parms, _gamColNames, _output._binvD, _output._zTranspose, 
+            _output._knots, _output._numKnots);
+/*    Frame adptedF = new Frame(Key.make(), test._names.clone(), test.vecs().clone()); // clone test dataset
     int numGamCols = _output._numKnots.length;
     Vec[] gamCols = new Vec[numGamCols];
     for (int vind=0; vind<numGamCols; vind++)
       gamCols[vind] = adptedF.vec(_parms._gam_columns[vind]).clone();
     Frame onlyGamCols = new Frame(_parms._gam_columns, gamCols);
     AddGamColumns genGamCols = new AddGamColumns(_output._binvD, _output._zTranspose, _output._knots, 
-            _output._numKnots, _output._dinfo, onlyGamCols);
+            _output._numKnots, onlyGamCols);
     genGamCols.doAll(genGamCols._gamCols2Add, Vec.T_NUM, onlyGamCols);
     String[] gamColsNames = new String[genGamCols._gamCols2Add];
     int offset = 0;
@@ -494,6 +496,47 @@ public class GAMModel extends Model<GAMModel, GAMModel.GAMParameters, GAMModel.G
     
     if (respV != null)
       adptedF.add(_parms._response_column, respV);
+    return adptedF;*/
+  }
+
+  public static Frame cleanUpInputFrame(Frame test, String[] testNames, GAMParameters parms, String[][] gamColNames, 
+                                 double[][][] binvD, double[][][] zTranspose, double[][] knots, int[] numKnots) {
+    Frame adptedF = new Frame(Key.make(), test._names.clone(), test.vecs().clone()); // clone test dataset
+    int numGamCols = parms._gam_columns.length;
+    Vec[] gamCols = new Vec[numGamCols];
+    for (int vind=0; vind<numGamCols; vind++)
+      gamCols[vind] = adptedF.vec(parms._gam_columns[vind]).clone();
+    Frame onlyGamCols = new Frame(parms._gam_columns, gamCols);
+    AddGamColumns genGamCols = new AddGamColumns(binvD, zTranspose, knots, numKnots, onlyGamCols);
+    genGamCols.doAll(genGamCols._gamCols2Add, Vec.T_NUM, onlyGamCols);
+    String[] gamColsNames = new String[genGamCols._gamCols2Add];
+    int offset = 0;
+    for (int ind=0; ind<genGamCols._numGAMcols; ind++) {
+      System.arraycopy(gamColNames[ind], 0, gamColsNames, offset, gamColNames[ind].length);
+      offset+= gamColNames[ind].length;
+    }
+    Frame oneAugmentedColumn = genGamCols.outputFrame(Key.make(), gamColsNames, null);
+    if (parms._ignored_columns != null) {  // remove ignored columns
+      for (String iname:parms._ignored_columns) {
+        if (ArrayUtils.contains(testNames, iname)) {
+          adptedF.remove(iname);
+        }
+      }
+    }
+    int numCols = adptedF.numCols();  // remove constant or bad frames.
+    for (int vInd=0; vInd<numCols; vInd++) {
+      Vec v = adptedF.vec(vInd);
+      if ((parms._ignore_const_cols &&  v.isConst()) || v.isBad())
+        adptedF.remove(vInd);
+    }
+    Vec respV = null;
+    if (ArrayUtils.contains(testNames, parms._response_column))
+      respV = adptedF.remove(parms._response_column);
+    adptedF.add(oneAugmentedColumn.names(), oneAugmentedColumn.removeAll());
+    Scope.track(oneAugmentedColumn);
+
+    if (respV != null)
+      adptedF.add(parms._response_column, respV);
     return adptedF;
   }
 
