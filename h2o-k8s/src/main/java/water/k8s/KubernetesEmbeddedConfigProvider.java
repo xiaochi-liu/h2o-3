@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 public class KubernetesEmbeddedConfigProvider implements EmbeddedConfigProvider {
 
     private static final String K8S_NODE_LOOKUP_TIMEOUT_KEY = "H2O_NODE_LOOKUP_TIMEOUT";
-    private static final String K8S_DESIRED_CLUSTER_SIZE_KEY = "H2O_NODE_EXPECTED_COUNT";
+    public static final String K8S_DESIRED_CLUSTER_SIZE_KEY = "H2O_NODE_EXPECTED_COUNT";
 
     private boolean runningOnKubernetes = false;
     private KubernetesEmbeddedConfig kubernetesEmbeddedConfig;

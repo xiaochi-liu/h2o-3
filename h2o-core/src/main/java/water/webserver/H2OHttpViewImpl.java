@@ -2,6 +2,7 @@ package water.webserver;
 
 import org.apache.commons.io.IOUtils;
 import water.ExtensionManager;
+import water.H2O;
 import water.api.RequestServer;
 import water.server.ServletService;
 import water.server.ServletUtils;
@@ -70,6 +71,7 @@ public class H2OHttpViewImpl implements H2OHttpView {
 
   @Override
   public boolean gateHandler(HttpServletRequest request, HttpServletResponse response) {
+    H2O.startServingRestApi();
     ServletUtils.startRequestLifecycle();
     while (! isAcceptingRequests()) {
       try { Thread.sleep(100); }
